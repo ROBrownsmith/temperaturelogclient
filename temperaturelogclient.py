@@ -66,7 +66,7 @@ def postjsonviahttp():
   senddata = json.dumps(data)
   print (senddata)
 #post JSON to server
-  url = "http://192.168.0.4:5000/insertTemp"
+  url = "http://www.fridgetemperaturelog.co.uk/insertTemp"
   headers = {'content-type': 'application/json'}
   r = requests.post(url, data=senddata, headers=headers)
   return r
