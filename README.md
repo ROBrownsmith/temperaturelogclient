@@ -78,37 +78,49 @@ If keys present will list id_rsa.pub
 If not run
 
 ssh-keygen
+
 cat ~/.ssh/id_rsa.pub
 
 Copy output and paste to remote terminal
 
 echo <paste key> >> ~/.ssh/authorized_keys
+
 chmod 600 ~/.ssh/authorized_keys
 
 *Enable GPIO pins 
 
 sudo nano /boot/config.txt
+
 Gpio overlay =1
 
 *Install dependencies  
 
 sudo apt-get update
+
 sudo apt-get install -y supervisor git ufw 
 
 *Set up firewall 
 
 sudo ufw allow ssh 
+
 sudo ufw allow http
+
 sudo ufw allow 443/tcp
+
 sudo ufw —force enable
+
 sudo ufw status
 
 *Install client script 
 
 Git clone https://github.com/ROBrownsmith/temperaturelogclient
+
 cd temperaturelogclient
+
 Python3 -m venv venv 
+
 Source venv/bin/activate
+
 Pip install -r requirements.txt
 
 *Edit python script so JSON is sent to the correct URL  
@@ -127,15 +139,15 @@ sudo nano temperaturelogclient.conf
 (adjust your home directory if not using templogclient)
 
 [program:temperaturelogclient]
-command=/home/templogclient/temperaturelogclient/venv/bin/python home/pi/temperaturelogclient/temperaturelogclient.py
-#directory=/home/templogclient/temperaturelogclient
+command=/home/templogclient/temperaturelogclient/venv/bin/python home/templogclient/temperaturelogclient/temperaturelogclient.py
+
 startsecs=60
 user=templogclient
 autostart=true
 autorestart=true
 stopasgroup=true
 killasgroup=true
-stdout_logfile=/home/pi/temperaturelogclient/temperaturelogclient_output.txt
+stdout_logfile=/home/templogclient/temperaturelogclient/temperaturelogclient_output.txt
 redirect_stderr=true
 
 *restart Supervisor service
