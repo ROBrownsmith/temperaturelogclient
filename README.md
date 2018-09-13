@@ -20,6 +20,8 @@ https://www.amazon.co.uk/SODIAL-Temperature-Waterproof-Stainless-Terminal-black/
 
 *Assemble sensor and attach to GPIO pins
 
+See JPEG in repository
+
 *Install raspbian to sd card 
 
 In windows
