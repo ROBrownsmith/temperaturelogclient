@@ -37,9 +37,11 @@ In Linux
 sudo nano /etc/wpa_supplicant/wpa_supplicant.conf
 
 network={
+
     ssid="SSID"
     psk="password"
     key_mgmt=WPA-PSK
+
 }
 
 Create a file on the /boot partition of sd card named “ssh”.
