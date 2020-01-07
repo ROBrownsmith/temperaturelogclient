@@ -22,29 +22,33 @@ https://www.amazon.co.uk/SODIAL-Temperature-Waterproof-Stainless-Terminal-black/
 
 See JPEG in repository
 
-*Install raspbian to sd card 
+*Install raspbian to sd card (or buy one pre-loaded)
 
-In windows
+In windows:
 
-Use etcher to make image on sd card
+Use Etcher program to make raspbian image on sd card
 
 Download raspbian stretch lite .zip file from raspberry pi.org
 
 *Configure wireless & ssh 
 
-In Linux 
+In Linux, usng a card reader, mount the card and using a terminal
 
-sudo nano /etc/wpa_supplicant/wpa_supplicant.conf
+    sudo nano /etc/wpa_supplicant/wpa_supplicant.conf
 
-network={
+Change the SSID and password values to match your network.
 
-    ssid="SSID"
-    psk="password"
-    key_mgmt=WPA-PSK
+    network={
 
-}
+        ssid="SSID"
+        psk="password"
+        key_mgmt=WPA-PSK
+
+    }
 
 Create a file on the /boot partition of sd card named “ssh”.
+    
+    touch /boot/ssh
 
 *Connect to pi 
 
@@ -54,102 +58,110 @@ Log in to router to find IP address of pi
 
 From Linux terminal
 
-ssh pi@192.168.whatever the ip was
+    ssh pi@192.168.. # after @ symbol put whatever IP the router told you
+    
+Default password is raspberry
+
+You are now connected to the Pi
 
 *change pi root password 
 
-passwd 
+    passwd 
 
-*Change Linux user and give sudo privelage 
+*Change Linux user to templogclient and give sudo privelage 
 
-adduser --gecos "" templogclient 
+    adduser --gecos "" templogclient 
 
-usermod -aG sudo templogclient 
+    usermod -aG sudo templogclient 
 
-su templogclient 
+    su templogclient 
 
-*Copy public ssh cert for no password login 
+*Copy public ssh certificate for no-password login 
 
-Local machine- check for keys
+On Local machine in a different terminal window - check for keys
 
-ls ~/.ssh
+    ls ~/.ssh
 
-If keys present will list id_rsa.pub
-If not run
+If keys present will list a file called id_rsa.pub
+If not, run
 
-ssh-keygen
+    ssh-keygen
+    
+Either way, then    
 
-cat ~/.ssh/id_rsa.pub
+    cat ~/.ssh/id_rsa.pub
 
-Copy output and paste to remote terminal
+Copy output and paste to remote terminal (the Pi terminal). Replace <paste key> with your paste.
 
-echo <paste key> >> ~/.ssh/authorized_keys
+    echo <paste key> >> ~/.ssh/authorized_keys
 
-chmod 600 ~/.ssh/authorized_keys
+    chmod 600 ~/.ssh/authorized_keys
 
-*Enable GPIO pins 
+*Enable GPIO pins (still in Pi's terminal)
 
-sudo nano /boot/config.txt
+    sudo nano /boot/config.txt
+    
+Change to 
 
-Gpio overlay =1
+    Gpio overlay =1
 
 *Install dependencies  
 
-sudo apt-get update
+    sudo apt-get update
 
-sudo apt-get install -y supervisor git ufw 
+    sudo apt-get install -y supervisor git ufw 
 
 *Set up firewall 
 
-sudo ufw allow ssh 
+    sudo ufw allow ssh 
 
-sudo ufw allow http
+    sudo ufw allow http
 
-sudo ufw allow 443/tcp
+    sudo ufw allow 443/tcp
 
-sudo ufw —force enable
+    sudo ufw —force enable
 
-sudo ufw status
+    sudo ufw status
 
 *Install client script 
 
-Git clone https://github.com/ROBrownsmith/temperaturelogclient
+    Git clone https://github.com/ROBrownsmith/temperaturelogclient
 
-cd temperaturelogclient
+    cd temperaturelogclient
 
-Python3 -m venv venv 
+    Python3 -m venv venv 
 
-Source venv/bin/activate
+    Source venv/bin/activate
 
-Pip install -r requirements.txt
+    Pip install -r requirements.txt
 
-*Edit python script so JSON is sent to the correct URL  
+*Edit python script so JSON is sent to your correct URL (look on line 69.)
 
-sudo nano *.py
+    sudo nano *.py
 
 *Set up supervisor 
 
-sudo cp temperaturelogclient.conf /etc/supervisor/conf.d/temperaturelogclient.conf
+    sudo cp temperaturelogclient.conf /etc/supervisor/conf.d/temperaturelogclient.conf
 
 or
 
-cd /etc/supervisor/conf.d/
+    cd /etc/supervisor/conf.d/
 
-sudo nano temperaturelogclient.conf
-(adjust your home directory if not using templogclient)
+    sudo nano temperaturelogclient.conf
+(adjust your home directory if not using templogclient as user)
 
-[program:temperaturelogclient]
-command=/home/templogclient/temperaturelogclient/venv/bin/python home/templogclient/temperaturelogclient/temperaturelogclient.py
+    [program:temperaturelogclient]
+    command=/home/templogclient/temperaturelogclient/venv/bin/python home/templogclient/temperaturelogclient/temperaturelogclient.py
 
-startsecs=60
-user=templogclient
-autostart=true
-autorestart=true
-stopasgroup=true
-killasgroup=true
-stdout_logfile=/home/templogclient/temperaturelogclient/temperaturelogclient_output.txt
-redirect_stderr=true
+    startsecs=60
+    user=templogclient
+    autostart=true
+    autorestart=true
+    stopasgroup=true
+    killasgroup=true
+    stdout_logfile=/home/templogclient/temperaturelogclient/temperaturelogclient_output.txt
+    redirect_stderr=true
 
 *restart Supervisor service
 
-sudo supervisorctl reload
+    sudo supervisorctl reload
