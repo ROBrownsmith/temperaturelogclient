@@ -66,7 +66,7 @@ def postjsonviahttp():
   senddata = json.dumps(data)
   print (senddata)
 #post JSON to server
-  url = "https://www.fridgetemperaturelog.co.uk/insertTemp"
+  url = "https://www." #  complete the URL inside the quotes, point it to your templog server
   headers = {'content-type': 'application/json'}
   r = requests.post(url, data=senddata, headers=headers)
   return r
