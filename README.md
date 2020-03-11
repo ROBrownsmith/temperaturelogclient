@@ -1,5 +1,5 @@
 # temperaturelogclient
-Setting up pi zero w as temperaturelogclient 
+Setting up RaspberryPi Zero W as temperaturelogclient 
 
 *Purchase
 
@@ -54,21 +54,23 @@ Create a file on the /boot partition of sd card named “ssh”.
 
 Put sd card in pi zero and power up
 
-Log in to router to find IP address of pi
+Log in to your router to find IP address of Pi
 
 From Linux terminal
 
-    ssh pi@192.168.. # after @ symbol put whatever IP the router told you
+    ssh pi@192.168.. 
+    
+(after @ symbol put whatever IP the router told you)
     
 Default password is raspberry
 
 You are now connected to the Pi
 
-*change pi root password 
+*change Pi root password 
 
     passwd 
 
-*Change Linux user to templogclient and give sudo privelage 
+*Change Raspbian (Linux) user to templogclient and give sudo privelage 
 
     adduser --gecos "" templogclient 
 
@@ -135,7 +137,7 @@ Change to
 
     Pip install -r requirements.txt
 
-*Edit python script so JSON is sent to your correct URL (look on line 69.)
+*Edit python script so JSON is sent to your correct URL (look on line 69 of the script.)
 
     sudo nano *.py
 
@@ -165,3 +167,5 @@ or
 *restart Supervisor service
 
     sudo supervisorctl reload
+    
+The Pi should now be running the client.
